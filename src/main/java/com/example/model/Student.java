@@ -1,7 +1,10 @@
 package com.example.model;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
+
+
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -10,9 +13,10 @@ import java.util.UUID;
 @Entity
 @Table(name= "Students")
 public class Student {
-@Id
-@GeneratedValue(strategy = GenerationType.UUID)
-private UUID id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private UUID id;
     @Column(name = "surname")
 private String surname;
     @Column(name = "course")
