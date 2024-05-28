@@ -1,8 +1,7 @@
 package com.example.StudentDemo.model;
-
-
-
-
+/**
+ * Сущность студнет
+ */
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

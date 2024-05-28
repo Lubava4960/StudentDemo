@@ -19,14 +19,9 @@ public interface StudentMapper {
     }
 
 
-    static void studentUpdateDto(Student student, StudentUpdateDto studentUpdateDto) {
-
-        student = new Student();
+    static void updateStudentFromDto(Student student, StudentUpdateDto studentUpdateDto) {
         student.setSurname(studentUpdateDto.getSurname());
         student.setCourse(studentUpdateDto.getCourse());
         student.setBirthday(studentUpdateDto.getBirthday());
-
-
-
     }
 }

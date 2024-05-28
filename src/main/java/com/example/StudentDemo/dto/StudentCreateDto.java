@@ -1,4 +1,7 @@
 package com.example.StudentDemo.dto;
+/**
+ * DTO  создания данных студента
+ */
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

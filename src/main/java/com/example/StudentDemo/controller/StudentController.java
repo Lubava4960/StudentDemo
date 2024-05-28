@@ -1,5 +1,7 @@
 package com.example.StudentDemo.controller;
-
+/**
+ * контроллер для получения и обработки входящих запросов
+ */
 
 import com.example.StudentDemo.dto.StudentCreateDto;
 import com.example.StudentDemo.dto.StudentUpdateDto;
@@ -12,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,9 +24,9 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Controller
+@RestController
 
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
 
 
@@ -36,36 +38,29 @@ public class StudentController {
             tags= "cтуденты"
     )
     @GetMapping
-    public  ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> allStudentList = studentService.getAllStudent();
-      return (ResponseEntity<List<Student>>) studentService.getAllStudent();
-
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> students = studentService.getAllStudent();
+        return ResponseEntity.ok(students);
     }
 
     @Operation(
             summary = "получение инфрмацию о студенте по id",
+            description = "введите id студента",
             tags= "cтуденты"
     )
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable ("id") UUID id) throws ChangeSetPersister.NotFoundException {
 
-        Student student;
-        student = studentService.getStudent(UUID.randomUUID());
-     //   return ResponseEntity.ok(student);
-        return studentService.getStudent(id);
-   }
-
-//    public ResponseEntity<Student> getStudentById(@PathVariable UUID id) {
-//       Student student = (Student) studentRepository.findById(UUID.fromString(String.valueOf(id))).orElse(null);
-//        if (student == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(student);
-//    }
-
+    public ResponseEntity<Student> getStudentById(@PathVariable UUID id) {
+       Student student = (Student) studentRepository.findById(UUID.fromString(String.valueOf(id))).orElse(null);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(student);
+    }
 
     @Operation(
             summary = "можно создать данные нового студента ",
+            description = "введите данные студента",
             tags= "cтуденты"
     )
     @PostMapping
@@ -76,26 +71,19 @@ public class StudentController {
     }
 
     @Operation(
-            summary = "обновление данных студента ",
+            summary = "обновление данных студента по идентификатору ",
+            description = "введите id студента и  измените данные",
             tags= "cтуденты"
     )
-    @PutMapping("/{surname}")
-    public Student updateStudent(@PathVariable String surname, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
-        return studentService.updateStudent(surname, studentUpdateDto);
+    @PutMapping("/{id}")
+    public Student updateStudentById(@PathVariable UUID id, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
+        return studentService.updateStudent((id), studentUpdateDto);
     }
 
 
-    @Operation(
-            summary = "удаление данных студента по фамилии",
-            tags= "cтуденты"
-    )
-
-    @DeleteMapping("/{surname}")
-    public void deleteStudentBySurname(@PathVariable String surname) throws ChangeSetPersister.NotFoundException {
-        studentService.deleteStudentBySurname(surname);
-    }
     @Operation(
             summary = "удаление данных студента по id",
+            description = "введите id студента",
             tags= "cтуденты"
     )
 

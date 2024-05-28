@@ -1,4 +1,7 @@
 package com.example.StudentDemo.dto;
+/**
+ * DTO студента
+ */
 
 import lombok.*;
 
