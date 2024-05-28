@@ -1,12 +1,10 @@
-package com.example.dto;
+package com.example.StudentDemo.dto;
 
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDto {

@@ -1,38 +1,42 @@
-package com.example.service;
+package com.example.StudentDemo.service;
 
 
-import com.example.dto.StudentCreateDto;
+import com.example.StudentDemo.dto.StudentCreateDto;
+import com.example.StudentDemo.dto.StudentUpdateDto;
+import com.example.StudentDemo.mapper.StudentMapper;
+import com.example.StudentDemo.model.Student;
+import com.example.StudentDemo.repository.StudentRepository;
 
-import com.example.dto.StudentUpdateDto;
-import com.example.mapper.StudentMapper;
-import com.example.model.Student;
-import com.example.repository.StudentRepository;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-
+@Data
+@AllArgsConstructor
 @Service
 public class StudentService {
-    private final StudentRepository studentRepository = null;
+    private final StudentRepository studentRepository;
 
-    public Student getStudentById(UUID id) throws ChangeSetPersister.NotFoundException {
-        Student student = (Student) studentRepository.findById(id)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-        return StudentMapper.toDTO(student);
+    Map<Long, Student> allStudentList;
 
+    public Student getStudent(UUID id) throws ChangeSetPersister.NotFoundException {
 
+        return (Student) studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(("Student not found with id: " + id)));
     }
-   public List<Student> getAllStudent() {
-    return studentRepository.findAll();
+
+   public List<Student>  getAllStudent() {
+
+        return studentRepository.findAll();
 }
-
-
 
 
     public StudentCreateDto createStudent(StudentCreateDto studentCreateDTO) {
@@ -49,8 +53,6 @@ public class StudentService {
         return (studentCreateDTO);
     }
 
-
-
     public Student updateStudent(String surname, StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
         Student student = studentRepository.findBySurname(surname)
                 .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
@@ -65,7 +67,11 @@ public class StudentService {
                 .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
         studentRepository.delete(student);
     }
+    public void deleteStudentById(UUID studentId) throws ChangeSetPersister.NotFoundException {
+        Student student = (Student) studentRepository.findById(studentId)
+                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
-
+        studentRepository.delete(student);
+    }
 
 }
