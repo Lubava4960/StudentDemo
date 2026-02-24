@@ -4,14 +4,18 @@ package com.example.StudentDemo.controller;
  */
 
 import com.example.StudentDemo.dto.StudentCreateDto;
+import com.example.StudentDemo.dto.StudentDto;
 import com.example.StudentDemo.dto.StudentUpdateDto;
 import com.example.StudentDemo.model.Student;
 import com.example.StudentDemo.repository.StudentRepository;
 import com.example.StudentDemo.service.StudentService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 
@@ -22,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 @RestController
@@ -29,13 +34,16 @@ import java.util.UUID;
 @RequestMapping("/students")
 public class StudentController {
 
-
     private final StudentService studentService;
     private final StudentRepository studentRepository;
 
     @Operation(
             summary = "получение списка студентов",
-            tags= "cтуденты"
+            tags = "cтуденты"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Списки выведены"
     )
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
@@ -46,45 +54,68 @@ public class StudentController {
     @Operation(
             summary = "получение инфрмацию о студенте по id",
             description = "введите id студента",
-            tags= "cтуденты"
+            tags = "cтуденты"
     )
-    @GetMapping("/{id}")
 
-    public ResponseEntity<Student> getStudentById(@PathVariable UUID id) {
-       Student student = (Student) studentRepository.findById(UUID.fromString(String.valueOf(id))).orElse(null);
+
+    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Студент найден"),
+            @ApiResponse(responseCode = "404", description = "Студент не найден")
+    })
+    public Student getStudentById(@PathVariable UUID id) {
+        // Поиск студента по ID
+        Student student = (Student) studentRepository.findById(id).orElse(null);
         if (student == null) {
-            return ResponseEntity.notFound().build();
+            log.warn("Студент не найден с ID: " + id);
+            return null;
         }
-        return ResponseEntity.ok(student);
+
+        return student;
     }
 
     @Operation(
             summary = "можно создать данные нового студента ",
             description = "введите данные студента",
-            tags= "cтуденты"
+            tags = "cтуденты"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Данные созданы"
     )
     @PostMapping
     public ResponseEntity<StudentCreateDto> createStudent(@RequestBody StudentCreateDto newStudent) throws IOException {
-
-        StudentCreateDto createStudent = studentService.createStudent(newStudent);
-        return ResponseEntity.ok(createStudent);
+        StudentCreateDto studentCreateDto = studentService.createStudent(newStudent);
+        return ResponseEntity.ok(studentCreateDto);
     }
 
     @Operation(
             summary = "обновление данных студента по идентификатору ",
             description = "введите id студента и  измените данные",
-            tags= "cтуденты"
+            tags = "cтуденты"
     )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Данные обновлены"
+    )
+
     @PutMapping("/{id}")
-    public Student updateStudentById(@PathVariable UUID id, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
+    public StudentDto updateStudentById(@PathVariable UUID id, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
         return studentService.updateStudent((id), studentUpdateDto);
     }
-
 
     @Operation(
             summary = "удаление данных студента по id",
             description = "введите id студента",
-            tags= "cтуденты"
+            tags = "cтуденты"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Данные удалены"
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Данные не удалены"
     )
 
     @DeleteMapping("/{id}")
@@ -96,7 +127,5 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
 }
