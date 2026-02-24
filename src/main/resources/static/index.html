@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аутентификация и Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button, input {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+
+<h2>Вход</h2>
+<input type="text" id="loginUsername" placeholder="Имя пользователя" required>
+<input type="password" id="loginPassword" placeholder="Пароль" required>
+<button id="loginButton">Войти</button>
+<p id="loginMessage"></p>
+
+<h2>Регистрация</h2>
+<input type="text" id="registerUsername" placeholder="Имя пользователя" required>
+<input type="password" id="registerPassword" placeholder="Пароль" required>
+<button id="registerButton">Зарегистрироваться</button>
+<p id="registrationMessage"></p>
+
+<h2>Тестирование API</h2>
+<button id="fetchHelloButton">Получить приветственное сообщение</button>
+<p id="helloMessage"></p>
+
+<script>
+    // Обработчик для входа
+    document.getElementById("loginButton").addEventListener("click", function () {
+        const username = document.getElementById("loginUsername").value;
+        const password = document.getElementById("loginPassword").value;
+
+        fetch('http://localhost:8080/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Неверное имя пользователя или пароль');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById("loginMessage").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("loginMessage").innerText = error.message;
+            });
+    });
+
+    // Обработчик для регистрации
+    document.getElementById("registerButton").addEventListener("click", function () {
+        const username = document.getElementById("registerUsername").value;
+        const password = document.getElementById("registerPassword").value;
+
+        fetch('http://localhost:8080/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка регистрации');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("registrationMessage").innerText = data.message;
+            })
+            .catch(error => {
+                document.getElementById("registrationMessage").innerText = error.message;
+            });
+    });
+
+    // Обработчик для получения приветственного сообщения
+    document.getElementById("fetchHelloButton").addEventListener("click", function () {
+        fetch('http://localhost:8080/api/hello')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка получения приветственного сообщения');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById("helloMessage").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("helloMessage").innerText = error.message;
+            });
+    });
+</script>
+</body>
+</html>
