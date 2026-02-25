@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обновить Студента</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #FFC107; /  цвет фона /
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Обновить данные студента</h1>
+    <div class="form-group">
+        <label for="studentId">Введите ID студента:</label>
+        <input type="text" class="form-control" id="studentId" placeholder="Введите ID студента" required>
+    </div>
+    <div class="form-group">
+        <label for="surname">Фамилия:</label>
+        <input type="text" class="form-control" id="surname" placeholder="Введите фамилию" required>
+    </div>
+    <div class="form-group">
+        <label for="course">Курс:</label>
+        <input type="number" class="form-control" id="course" placeholder="Введите курс" required>
+    </div>
+    <div class="form-group">
+        <label for="birthday">Дата рождения:</label>
+        <input type="date" class="form-control" id="birthday" required>
+    </div>
+    <button class="btn btn-primary" id="updateStudentButton">Обновить студента</button>
+    <div id="responseMessage" class="mt-4"></div>
+    <button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+</div>
+
+<script>
+    // Функция для обновления данных студента по ID
+    async function updateStudent() {
+        const studentId = document.getElementById('studentId').value; // Получение studentId
+        const surname = document.getElementById('surname').value;
+        const course = document.getElementById('course').value;
+        const birthday = document.getElementById('birthday').value;
+
+        const student = {
+            surname: surname,
+            course: parseInt(course),
+            birthday: birthday
+        };
+
+        try {
+            const response = await fetch(`/student/update/${studentId}`, { // Убедитесь, что путь правильный
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении данных студента');
+            }
+
+            const result = await response.json();
+            document.getElementById('responseMessage').innerText = 'Данные студента обновлены успешно: ' + JSON.stringify(result);
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'Ошибка: ' + error.message;
+        }
+    }
+
+
+    document.getElementById('updateStudentButton').addEventListener('click', updateStudent);
+
+
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'student.html';
+    });
+</script>
+</body>
+</html>

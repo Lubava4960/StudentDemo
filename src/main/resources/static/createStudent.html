@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать Студента</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #90ee90; /цвет фона
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Создать нового студента</h1>
+    <div class="form-group">
+        <label for="surname">Фамилия:</label>
+        <input type="text" class="form-control" id="surname" placeholder="Введите фамилию" required>
+    </div>
+    <div class="form-group">
+        <label for="course">Курс:</label>
+        <input type="number" class="form-control" id="course" placeholder="Введите курс" required>
+    </div>
+    <div class="form-group">
+        <label for="birthday">Дата рождения:</label>
+        <input type="date" class="form-control" id="birthday" required>
+    </div>
+    <button class="btn btn-primary" id="createStudentButton">Создать студента</button>
+    <div id="responseMessage" class="mt-4"></div>
+    <button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+</div>
+
+<script>
+    // Функция для создания нового студента
+    async function createStudent() {
+        const surname = document.getElementById('surname').value;
+        const course = document.getElementById('course').value;
+        const birthday = document.getElementById('birthday').value;
+
+        const student = {
+            id: generateUUID(), // Генерация уникального ID
+            surname: surname,
+            course: parseInt(course),
+            birthday: birthday
+        };
+
+        try {
+            const response = await fetch('/student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при создании студента');
+            }
+
+            const result = await response.json();
+            document.getElementById('responseMessage').innerText = 'Студент создан успешно: ' + JSON.stringify(result);
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'Ошибка: ' + error.message;
+        }
+    }
+
+    // Генерация уникального ID (пример, можно использовать библиотеку)
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    // Обработчик события для кнопки "Создать студента"
+    document.getElementById('createStudentButton').addEventListener('click', createStudent);
+
+    // Обработчик события для кнопки "Назад"
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'student.html'; // Переход обратно на главную страницу
+    });
+</script>
+</body>
+</html>

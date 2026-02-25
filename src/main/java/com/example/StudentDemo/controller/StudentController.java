@@ -31,7 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 
-@RequestMapping("/students")
+@RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;
@@ -45,14 +45,14 @@ public class StudentController {
             responseCode = "200",
             description = "Списки выведены"
     )
-    @GetMapping
+    @GetMapping("/students")
     public ResponseEntity<List<Student>> getAllStudents() {
         List<Student> students = studentService.getAllStudent();
         return ResponseEntity.ok(students);
     }
 
     @Operation(
-            summary = "получение инфрмацию о студенте по id",
+            summary = "получение информацию о студенте по id",
             description = "введите id студента",
             tags = "cтуденты"
     )
@@ -99,7 +99,7 @@ public class StudentController {
             description = "Данные обновлены"
     )
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public StudentDto updateStudentById(@PathVariable UUID id, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
         return studentService.updateStudent((id), studentUpdateDto);
     }
@@ -118,7 +118,7 @@ public class StudentController {
             description = "Данные не удалены"
     )
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteStudentById(@PathVariable("id") UUID Id) {
         try {
             studentService.deleteStudentById(Id);

@@ -60,7 +60,8 @@
                 return response.text();
             })
             .then(data => {
-                document.getElementById("loginMessage").innerText = data;
+                // Если вход успешен, перенаправляем на страницу управления студентами
+                window.location.href = 'http://localhost:8080/student.html';
             })
             .catch(error => {
                 document.getElementById("loginMessage").innerText = error.message;
