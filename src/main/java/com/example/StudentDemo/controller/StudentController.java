@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -41,10 +43,7 @@ public class StudentController {
             summary = "получение списка студентов",
             tags = "cтуденты"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Списки выведены"
-    )
+
     @GetMapping("/students")
     public ResponseEntity<List<Student>> getAllStudents() {
         List<Student> students = studentService.getAllStudent();
@@ -59,34 +58,25 @@ public class StudentController {
 
 
     @GetMapping("/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Студент найден"),
-            @ApiResponse(responseCode = "404", description = "Студент не найден")
-    })
-    public Student getStudentById(@PathVariable UUID id) {
-        // Поиск студента по ID
-        Student student = (Student) studentRepository.findById(id).orElse(null);
-        if (student == null) {
+    public ResponseEntity<Student> getStudentById(@PathVariable UUID id) {
+        Optional<Student> studentOpt = studentRepository.findById(id);
+        if (studentOpt.isPresent()) {
+            return ResponseEntity.ok(studentOpt.get());
+        } else {
             log.warn("Студент не найден с ID: " + id);
-            return null;
+            return ResponseEntity.notFound().build();
         }
-
-        return student;
     }
-
     @Operation(
             summary = "можно создать данные нового студента ",
             description = "введите данные студента",
             tags = "cтуденты"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Данные созданы"
-    )
+
     @PostMapping
     public ResponseEntity<StudentCreateDto> createStudent(@RequestBody StudentCreateDto newStudent) throws IOException {
-        StudentCreateDto studentCreateDto = studentService.createStudent(newStudent);
-        return ResponseEntity.ok(studentCreateDto);
+        StudentCreateDto createdStudent = studentService.createStudent(newStudent);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
     @Operation(
@@ -94,28 +84,17 @@ public class StudentController {
             description = "введите id студента и  измените данные",
             tags = "cтуденты"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Данные обновлены"
-    )
 
     @PutMapping("/update/{id}")
     public StudentDto updateStudentById(@PathVariable UUID id, @RequestBody StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {
         return studentService.updateStudent((id), studentUpdateDto);
+
     }
 
     @Operation(
             summary = "удаление данных студента по id",
             description = "введите id студента",
             tags = "cтуденты"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Данные удалены"
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Данные не удалены"
     )
 
     @DeleteMapping("/delete/{id}")

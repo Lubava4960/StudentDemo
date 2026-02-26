@@ -39,7 +39,7 @@
         const birthday = document.getElementById('birthday').value;
 
         const student = {
-            id: generateUUID(), // Генерация уникального ID
+            id: generateUUID(),
             surname: surname,
             course: parseInt(course),
             birthday: birthday
@@ -54,14 +54,18 @@
                 body: JSON.stringify(student)
             });
 
-            if (!response.ok) {
-                throw new Error('Ошибка при создании студента');
+            if (response.ok) {
+                document.getElementById('responseMessage').innerText = 'Данные студента успешно внесены в систему.';
+
+            } else {
+
+                const errorMessage = await response.text();
+                throw new Error(errorMessage);
             }
 
-            const result = await response.json();
-            document.getElementById('responseMessage').innerText = 'Студент создан успешно: ' + JSON.stringify(result);
         } catch (error) {
-            document.getElementById('responseMessage').innerText = 'Ошибка: ' + error.message;
+
+            alert(`Ошибка: ${error.message}`);
         }
     }
 

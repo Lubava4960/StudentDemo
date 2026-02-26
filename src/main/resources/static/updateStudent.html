@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #FFC107; /  цвет фона /
+            background-color: #FFC107;
+        / цвет фона /
         }
     </style>
 </head>
@@ -59,13 +60,14 @@
             });
 
             if (!response.ok) {
-                throw new Error('Ошибка при обновлении данных студента');
+                const errorMessage = await response.text();
+                throw new Error(errorMessage);
             }
 
-            const result = await response.json();
-            document.getElementById('responseMessage').innerText = 'Данные студента обновлены успешно: ' + JSON.stringify(result);
+            document.getElementById('responseMessage').innerText = 'Данные студента успешно внесены в систему.';
+
         } catch (error) {
-            document.getElementById('responseMessage').innerText = 'Ошибка: ' + error.message;
+            alert(`Ошибка: ${error.message}`);
         }
     }
 
