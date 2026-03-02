@@ -27,11 +27,11 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() // все остальные запросы требуют аутентификации
                 .and()
                 .formLogin()
-                //.loginPage("/hello.html") // укажите свой путь к странице входа
+                //.loginPage("/hello.html") //  свой путь к странице входа
                 .permitAll() // разрешить доступ к странице входа
                 .and()
                 .logout()
-                .permitAll(); // разрешить доступ к выходу
+                .permitAll(); // разрешить доступ ко выходу
     }
 
     @Override

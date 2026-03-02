@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Главная страница</title>
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background-color: #e0f7fa; /<i> Голубой фон </i>/
+    }
+    button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+    #getUsersButton {
+      background-color: #4CAF50; /<i> Зеленый для получения пользователей </i>/
+    }
+    #updateUsersButton {
+      background-color: #ff9800; /<i> Оранжевый для обновления пользователей </i>/
+    }
+    #deleteUsersButton {
+      background-color: #f44336; /<i> Красный для удаления пользователей </i>/
+    }
+
+    #backButton {
+      background-color: #2196F3; /<i> Синий для кнопки "Назад" </i>/
+    }
+
+  </style>
+</head>
+<body>
+<h1>Управление пользователями</h1>
+<p>Выберите действие:</p>
+
+<button id="getUsersButton" onclick="location.href='getUsers.html'">Получить пользователей</button>
+<button id="updateUsersButton" onclick="location.href='updateUsers.html'">Обновить пользователей</button>
+<button id="deleteUsersButton" onclick="location.href='deleteUsers.html'">Удалить пользователей</button>
+<button id="backButton" onclick="location.href='student.html'">Назад</button>
+</body>
+
+</html>

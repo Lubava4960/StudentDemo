@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #FFC107;
-        / цвет фона /
+            background-color: #E6E6FA; / Нежно фиолетовый цвет фона /
         }
     </style>
 </head>
@@ -69,14 +68,10 @@
         } catch (error) {
             alert(`Ошибка: ${error.message}`);
         }
-    }
-
-
-    document.getElementById('updateStudentButton').addEventListener('click', updateStudent);
-
+    }document.getElementById('updateStudentButton').addEventListener('click', updateStudent);
 
     document.getElementById('backButton').addEventListener('click', () => {
-        window.location.href = 'student.html';
+        window.location.href = 'student.html'; // Изменено на 'admin.html'
     });
 </script>
 </body>

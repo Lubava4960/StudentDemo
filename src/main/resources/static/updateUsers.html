@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обновление данных пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #E6E6FA; /<i> Нежно фиолетовый цвет фона </i>/
+        }
+        button, input {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 200px;
+        }
+        #message {
+            color: green;
+        }
+        #errorMessage {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Обновление данных пользователя</h1>
+
+<input type="text" id="username" placeholder="Имя пользователя" required>
+<input type="password" id="newPassword" placeholder="Новый пароль" required>
+<button id="updateUserButton">Обновить данные</button>
+
+<p id="message"></p>
+<p id="errorMessage"></p>
+
+<button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+
+<script>
+    // Обновление данных пользователя
+    document.getElementById("updateUserButton").addEventListener("click", function () {
+        const username = document.getElementById("username").value;
+        const newPassword = document.getElementById("newPassword").value;
+
+        fetch(`http://localhost:8080/api/users/update/${username}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: newPassword }), // Отправляем новый пароль
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка обновления данных пользователя');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("message").innerText = 'Данные пользователя обновлены успешно';
+                document.getElementById("errorMessage").innerText = ''; // Очистка сообщения об ошибке
+            })
+            .catch(error => {
+                document.getElementById("errorMessage").innerText = error.message;
+                document.getElementById("message").innerText = ''; // Очистка успешного сообщения
+            });
+    });
+
+    // Обработчик для кнопки "Назад"
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'admin.html'; // Переход на страницу admin.html
+    });
+</script>
+</body>
+</html>

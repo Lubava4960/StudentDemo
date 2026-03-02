@@ -29,12 +29,8 @@
 <input type="password" id="loginPassword" placeholder="Пароль" required>
 <button id="loginButton">Войти</button>
 <p id="loginMessage"></p>
-
-<h2>Регистрация</h2>
-<input type="text" id="registerUsername" placeholder="Имя пользователя" required>
-<input type="password" id="registerPassword" placeholder="Пароль" required>
+<h2>Зарегистрироваться</h2>
 <button id="registerButton">Зарегистрироваться</button>
-<p id="registrationMessage"></p>
 
 <h2>Тестирование API</h2>
 <button id="fetchHelloButton">Получить приветственное сообщение</button>
@@ -70,28 +66,7 @@
 
     // Обработчик для регистрации
     document.getElementById("registerButton").addEventListener("click", function () {
-        const username = document.getElementById("registerUsername").value;
-        const password = document.getElementById("registerPassword").value;
-
-        fetch('http://localhost:8080/api/users/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: username, password: password }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Ошибка регистрации');
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById("registrationMessage").innerText = data.message;
-            })
-            .catch(error => {
-                document.getElementById("registrationMessage").innerText = error.message;
-            });
+        window.location.href = 'reg.html'; // Путь на страницу регистрации
     });
 
     // Обработчик для получения приветственного сообщения

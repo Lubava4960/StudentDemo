@@ -70,11 +70,18 @@ public class UserService {
     public List<User> getAllUser() {
         return userRepository.findAll();
     }
+
     public void deleteUser(UUID Id) {
         userRepository.deleteById(Id);
     }
+
     public void deleteAllUserByUsername(String username) {
-        userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+        } else {
+            throw new RuntimeException("Пользователь с таким именем не найден");
+        }
     }
 }
 
