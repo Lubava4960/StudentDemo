@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Удалить Студента</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #add8e6; /<i> Голубой цвет фона </i>/
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Удалить студента</h1>
+  <div class="form-group">
+    <label for="studentId">Введите ID студента:</label>
+    <input type="text" class="form-control" id="studentId" placeholder="Введите ID студента" required>
+  </div>
+  <button class="btn btn-danger" id="deleteStudentButton">Удалить студента</button>
+  <div id="responseMessage" class="mt-4"></div>
+  <button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+</div>
+
+<script>
+  // Функция для удаления студента по ID
+  async function deleteStudent() {
+    const studentId = document.getElementById('studentId').value; // Получение studentId
+
+    try {
+      const response = await fetch(`/student/delete/${studentId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при удалении студента');
+      }
+
+      document.getElementById('responseMessage').innerText = 'Студент удален успешно.';
+    } catch (error) {
+      document.getElementById('responseMessage').innerText = 'Ошибка: ' + error.message;
+    }
+  }
+
+  // Обработчик события для кнопки "Удалить студента"
+  document.getElementById('deleteStudentButton').addEventListener('click', deleteStudent);
+
+
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'student.html';
+  });
+</script>
+</body>
+</html>

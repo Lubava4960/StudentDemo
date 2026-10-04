@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Удаление пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #E6E6FA; / Нежно фиолетовый цвет фона /
+        }
+        button, input {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 200px;
+        }
+        #message {
+            color: green;
+        }
+        #errorMessage {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Удаление пользователя</h1>
+
+<h2>Удаление по ID</h2>
+<input type="text" id="userId" placeholder="ID пользователя" required>
+<button id="deleteUserByIdButton">Удалить пользователя по ID</button>
+
+<h2>Удаление по имени</h2>
+<input type="text" id="username" placeholder="Имя пользователя" required>
+<button id="deleteUserByUsernameButton">Удалить пользователя по имени</button>
+
+<p id="message"></p>
+<p id="errorMessage"></p>
+
+<button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+
+<script>
+    // Удаление пользователя по ID
+    document.getElementById("deleteUserByIdButton").addEventListener("click", function () {
+        const userId = document.getElementById("userId").value;
+
+        fetch(`http://localhost:8080/api/users/${userId}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка удаления пользователя по ID');
+                }
+                // Проверка на статус 204
+                if (response.status === 204) {
+                    document.getElementById("message").innerText = 'Пользователь успешно удален по ID';
+                }
+            })
+            .catch(error => {
+                document.getElementById("errorMessage").innerText = error.message;
+                document.getElementById("message").innerText = ''; // Очистка успешного сообщения
+            });
+    });
+
+    // Удаление пользователя по имени
+    document.getElementById("deleteUserByUsernameButton").addEventListener("click", function () {
+        const username = document.getElementById("username").value;
+
+        fetch(`http://localhost:8080/api/users/username?username=${username}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка удаления пользователя по имени');
+                }
+                // Проверка на статус 204
+                if (response.status === 204) {
+                    document.getElementById("message").innerText = 'Пользователь успешно удален по имени';   }
+            })
+            .catch(error => {
+                document.getElementById("errorMessage").innerText = error.message;
+                document.getElementById("message").innerText = ''; // Очистка успешного сообщения
+            });
+    });
+
+    // Обработчик для кнопки "Назад"
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'admin.html'; // Переход на страницу admin.html
+    });
+</script>
+</body>
+</html>

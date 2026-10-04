@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button, input {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<h2>Регистрация</h2>
+<input type="text" id="registerUsername" placeholder="Имя пользователя" required>
+<input type="password" id="registerPassword" placeholder="Пароль" required>
+<button id="registerButton">Зарегистрироваться</button>
+<p id="registrationMessage"></p>
+
+<!-- Кнопка возврата на страницу входа -->
+<button id="backButton">Назад</button>
+
+<script>
+    // Обработчик для регистрации
+    document.getElementById("registerButton").addEventListener("click", function () {
+        const username = document.getElementById("registerUsername").value;
+        const password = document.getElementById("registerPassword").value;
+
+        fetch('http://localhost:8080/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка регистрации');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("registrationMessage").innerText = data.message;
+            })
+            .catch(error => {
+                document.getElementById("registrationMessage").innerText = error.message;
+            });
+    });
+
+    // Обработчик для кнопки возврата
+    document.getElementById("backButton").addEventListener("click", function () {
+        window.location.href = 'index.html'; // Путь на страницу входа
+    });
+</script>
+</body>
+</html>

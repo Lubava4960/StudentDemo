@@ -20,10 +20,13 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ValidationException;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static java.lang.System.out;
 
 @Data
 @AllArgsConstructor
@@ -48,8 +51,15 @@ public class StudentService  {
 
     public StudentCreateDto createStudent(StudentCreateDto studentCreateDTO) {
         if (studentCreateDTO.getSurname() == null || studentCreateDTO.getSurname().isEmpty()) {
-            throw new IllegalArgumentException("Surname cannot be null or empty");
+            throw new ValidationException("Имя не должно быть пустым");
         }
+        if (studentCreateDTO.getCourse() <= 0) {
+            throw new ValidationException("Курс не должен быть 0");
+        }
+        if (studentCreateDTO.getBirthday() == null) {
+            throw new ValidationException("Дата рождения не должна быть пустой");
+        }
+
 
         Student student = new Student();
         student.setSurname(studentCreateDTO.getSurname());
@@ -58,6 +68,7 @@ public class StudentService  {
 
         Student savedStudent = studentRepository.save(student);
         return (studentCreateDTO);
+
     }
 
     public StudentDto updateStudent(UUID id, StudentUpdateDto studentUpdateDto) throws ChangeSetPersister.NotFoundException {

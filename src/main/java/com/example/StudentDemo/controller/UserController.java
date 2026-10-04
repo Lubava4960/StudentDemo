@@ -2,7 +2,6 @@ package com.example.StudentDemo.controller;
 
 import com.example.StudentDemo.dto.UserDTO;
 import com.example.StudentDemo.model.RegisterRequest;
-import com.example.StudentDemo.model.Student;
 import com.example.StudentDemo.model.User;
 import com.example.StudentDemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

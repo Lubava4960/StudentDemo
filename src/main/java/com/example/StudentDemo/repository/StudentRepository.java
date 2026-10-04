@@ -15,7 +15,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     List<Student> findAll();
 
-    Optional<Object> findById(UUID id);
+    Optional<Student> findById(UUID id);
 
 
 }

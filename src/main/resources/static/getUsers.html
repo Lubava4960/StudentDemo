@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список пользователей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #E6E6FA; / Нежно фиолетовый цвет /
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #backButton {
+            background-color: #4CAF50; / Зеленый цвет для кнопки возврата /
+        color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Список пользователей</h1>
+<button id="fetchUsersButton">Получить список пользователей</button>
+<button id="backButton" onclick="location.href='admin.html'">Назад</button>
+<table id="userTable" style="display:none;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя пользователя</th>
+        <th>Пароль</th>
+        <th>ID студента</th>
+        <th>Дата создания</th>
+    </tr>
+    </thead>
+    <tbody id="userTableBody"></tbody>
+</table>
+<p id="errorMessage" style="color: red;"></p>
+
+<script>
+    // Получение списка пользователей
+    document.getElementById("fetchUsersButton").addEventListener("click", function () {
+        fetch('http://localhost:8080/api/users/users')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка получения списка пользователей');
+                }
+                return response.json();
+            })
+            .then(users => {
+                const userTableBody = document.getElementById("userTableBody");
+                userTableBody.innerHTML = ''; // Очистка таблицы перед обновлением
+                users.forEach(user => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                            <td>${user.id}</td>
+                            <td>${user.username}</td>
+                            <td>${user.password}</td>
+                            <td>${user.studentId || 'Нет'}</td>
+                            <td>${new Date(user.createdAt).toLocaleString()}</td>
+                        `;
+                    userTableBody.appendChild(row);
+                });
+                document.getElementById("userTable").style.display = 'table'; // Показываем таблицу
+            })
+            .catch(error => {
+                document.getElementById("errorMessage").innerText = error.message;
+                document.getElementById("userTable").style.display = 'none'; // Скрываем таблицу при ошибке
+            });
+    });
+</script>
+</body>
+</html>

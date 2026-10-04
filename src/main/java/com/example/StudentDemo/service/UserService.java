@@ -7,15 +7,16 @@ import com.example.StudentDemo.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService  {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -70,12 +71,21 @@ public class UserService {
     public List<User> getAllUser() {
         return userRepository.findAll();
     }
+
     public void deleteUser(UUID Id) {
         userRepository.deleteById(Id);
     }
+
     public void deleteAllUserByUsername(String username) {
-        userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+        } else {
+            throw new RuntimeException("Пользователь с таким именем не найден");
+        }
     }
+
+
 }
 
 

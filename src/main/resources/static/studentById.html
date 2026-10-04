@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Информация о студенте</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #add8e6; / Голубой цвет фона /
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Получить информацию о студенте по ID</h1>
+  <div class="form-group">
+    <label for="studentId">Введите ID студента:</label>
+    <input type="text" class="form-control" id="studentId" placeholder="Введите ID студента">
+  </div>
+  <button class="btn btn-primary" id="getStudentButton">Получить информацию</button>
+  <div id="studentInfo" class="mt-4"></div>
+  <button class="btn btn-secondary mt-3" id="backButton">Назад</button>
+</div>
+
+<script>
+  // Функция для получения информации о студенте по ID
+  async function fetchStudentById() {
+    const studentId = document.getElementById('studentId').value;
+    try {
+      const response = await fetch(`/student/${studentId}`); // Путь к вашему API для получения студента по ID
+      if (!response.ok) {
+        throw new Error('Студент не найден');
+      }
+      const student = await response.json();
+      displayStudentInfo(student);
+    } catch (error) {
+      document.getElementById('studentInfo').innerText = 'Ошибка: ' + error.message;
+    }
+  }
+
+  // Функция для отображения информации о студенте
+  function displayStudentInfo(student) {
+    const studentInfo = document.getElementById('studentInfo');
+    studentInfo.innerHTML = `
+                <strong>ID:</strong> ${student.id}<br>
+                <strong>Фамилия:</strong> ${student.surname}<br>
+                <strong>Курс:</strong> ${student.course}<br>
+                <strong>Дата рождения:</strong> ${student.birthday}
+            `;
+  }
+
+  // Обработчик события для кнопки "Получить информацию"
+  document.getElementById('getStudentButton').addEventListener('click', fetchStudentById);
+
+  // Обработчик события для кнопки "Назад"
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'student.html'; // Переход обратно на главную страницу
+  });
+</script>
+</body>
+</html>

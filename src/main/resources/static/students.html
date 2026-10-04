@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список Студентов</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #add8e6; /<i> Голубой цвет фона </i>/
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Список Студентов</h1>
+  <div id="studentList" class="mt-4"></div>
+  <button class="btn btn-primary mt-3" id="backButton">Назад</button>
+</div>
+
+<script>
+  // Функция для получения списка студентов
+  async function fetchStudents() {
+    try {
+      const response = await fetch('/student/students');
+      if (!response.ok) {
+        throw new Error('Сеть не отвечает');
+      }
+      const students = await response.json();
+      displayStudents(students);
+    } catch (error) {
+      document.getElementById('studentList').innerText = 'Ошибка: ' + error.message;
+    }
+  }
+
+  // Функция для отображения студентов
+  function displayStudents(students) {
+    const studentList = document.getElementById('studentList');
+    studentList.innerHTML = ''; // Очистить предыдущий список
+    students.forEach(student => {
+      const studentDiv = document.createElement('div');
+      studentDiv.className = 'border p-2 mb-2';
+      studentDiv.innerHTML = `
+                    <strong>ID:</strong> ${student.id}<br>
+                    <strong>Фамилия:</strong> ${student.surname}<br>
+                    <strong>Курс:</strong> ${student.course}<br>
+                    <strong>Дата рождения:</strong> ${student.birthday}
+                `;
+      studentList.appendChild(studentDiv);
+    });
+  }
+
+
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'student.html';
+  });
+
+
+  fetchStudents();
+</script>
+</body>
+</html>
