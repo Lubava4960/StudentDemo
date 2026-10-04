@@ -7,15 +7,16 @@ import com.example.StudentDemo.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService  {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -83,6 +84,8 @@ public class UserService {
             throw new RuntimeException("Пользователь с таким именем не найден");
         }
     }
+
+
 }
 
 
